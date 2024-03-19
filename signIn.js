@@ -26,7 +26,7 @@ let login =()=>{
         console.log(stringifyObject);
         localStorage.setItem('userData',stringifyObject);
         console.log(localStorage);
-        // window.location ="todo.html";
+        window.location ="todo.html";
         console.log('ok')
 
     })
