@@ -1,5 +1,5 @@
 import{signInWithEmailAndPassword, auth
-} from "./firebase.js"
+} from "./allFirebase.js"
 
 
 let userEmail = document.getElementById('email')

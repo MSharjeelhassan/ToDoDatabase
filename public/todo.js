@@ -1,4 +1,4 @@
-import{db, ref, set, onValue, push, remove} from "./firebase.js"
+import{db, ref, set, onValue, push, remove} from "./allFirebase.js"
 
 
 let addItem = document.getElementById('addItem');
@@ -20,9 +20,9 @@ welcomeName.innerText = userObj.email.slice(0,userObj.email.indexOf('@'));
 addItem.addEventListener('click',()=>{
     userObj.task = enterTask.value;
 
-let id = push(ref(db,`todo/${userObj.uid}`)).key;
+    userObj.taskId = push(ref(db,`todo/${userObj.uid}`)).key;
 
-let refer = ref(db,`todo/${userObj.uid}/${id}`);
+let refer = ref(db,`todo/${userObj.uid}/${userObj.taskId}`);
 set(refer,userObj);
 // return id;
 console.log(userObj.task);
@@ -38,7 +38,7 @@ onValue(reference, (snapshot) => {
   console.log(snapshotData);
   mainDiv.innerHTML = "";
    for(let i=0; i<Object.values(snapshotData).length;i++){
-    console.log(Object.values(snapshotData)[i].task)
+    console.log(Object.values(snapshotData)[i])
 
     let div = document.createElement('div');
     let content = document.createElement('p');
@@ -62,7 +62,7 @@ onValue(reference, (snapshot) => {
     div.appendChild(delTaskBtn);
     delTaskBtn.className="btn btn-danger ms-2"
     delTaskBtn.setAttribute('onclick','delTask(this)');
-    delTaskBtn.setAttribute('id','userObj.uid');
+    delTaskBtn.setAttribute('id',`${Object.values(snapshotData)[i].taskId}`);
         enterTask.value = "";
  
    }
@@ -85,7 +85,11 @@ window.edit= function(a){
 }
 
 window.delTask= function(a){
-    a.parentNode.remove();
+    console.log(a);
+    console.log(a.id)
+    var delReference = ref(db,`todo/${userObj.uid}/${a.id}`);
+    // a.parentNode.remove();
+    remove(delReference);
    
 
 }
