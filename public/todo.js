@@ -18,6 +18,8 @@ welcomeName.innerText = userObj.email.slice(0,userObj.email.indexOf('@'));
 // +++++++++++++++++ Add task btn  +   Sending DATA TO DATABASE ++++++++++++++++++++++++++++++++++++++++
 
 addItem.addEventListener('click',()=>{
+if(enterTask.value!==""){
+    
     userObj.task = enterTask.value;
 
     userObj.taskId = push(ref(db,`todo/${userObj.uid}`)).key;
@@ -27,6 +29,10 @@ set(refer,userObj);
 // return id;
 console.log(userObj.task);
 
+}
+
+
+else{alert('Please enter the task')};
 })
 // +++++++++++++++ Getting DATA from DATABASE +++++++++++++++Start horaha hy +++++++++++++++++++++++++++
 
@@ -55,6 +61,8 @@ onValue(reference, (snapshot) => {
     div.appendChild(editBtn);
     editBtn.className = "btn btn-primary"
     editBtn.setAttribute('onclick','edit(this)');
+    editBtn.setAttribute('id',`${Object.values(snapshotData)[i].taskId}`);
+    // editBtn.setAttribute('id',`${Object.values(snapshotData)[i].task}`);
     
     let delTaskBtn  = document.createElement('button');
     let delTaskHeading = document.createTextNode('Delete Task');
@@ -79,9 +87,20 @@ deleteAll.addEventListener('click',()=>{
 
 
 window.edit= function(a){
-    let userPrompt = prompt();
-   let abc = a.parentNode.firstChild;
-   abc.innerHTML = userPrompt;
+    let userPrompt = prompt("Enter the task", a.parentNode.firstChild.innerHTML);
+    let abc = a.parentNode.firstChild;
+    console.log(a.parentNode.firstChild.innerHTML);
+    console.log(a);
+       if(userPrompt!==""){
+           abc.innerHTML = userPrompt;
+       }
+let EditReference = ref(db,`todo/${userObj.uid}/${a.id}`);
+userObj.task = userPrompt;
+userObj.id=a.id;
+
+
+set(EditReference,userObj);
+
 }
 
 window.delTask= function(a){
